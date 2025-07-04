@@ -91,5 +91,5 @@ def plot_loss(losses):
     x = np.arange(1, length+1)
     y = np.array(losses)
     plt.plot(x, y)
-    plt.show()
     plt.savefig('loss')
+    
