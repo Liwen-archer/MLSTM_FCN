@@ -14,11 +14,12 @@ def train(model, trainloader, criterion, optimizer, epoches=10, device='cpu', ru
     best_loss = np.inf
     
     losses = []
+    state = {}
+    ipoch = 0
     
+    model.train()
     for epoch in range(epoches):
         train_loss = 0.0
-        
-        model.train()
         for inputs, labels, in trainloader:      
             inputs = inputs.float()
             inputs, labels = inputs.to(device), labels.to(device)
@@ -37,17 +38,19 @@ def train(model, trainloader, criterion, optimizer, epoches=10, device='cpu', ru
         if train_loss < best_loss:
             best_loss = train_loss
             print("Epoch: {}/{}.. ".format(epoch + 1, epoches), "Training Loss: {:.6f}.. ".format(train_loss))
-            torch.save(model.state_dict(), f'weights/{run_name}.pt')
-            
+            state = model.state_dict()
+            ipoch = epoch + 1
+    
+    torch.save(state, f'weights/{run_name}_{ipoch}.pt')       
     return losses
             
      
 def test(model, testloader, criterion, device='cuda:0'):
-    accuracy = 0.0
     acc_metric = Accuracy()
     prec_metric = Precision(average=True)
     rec_metric = Recall(average=True)
     test_loss = 0.0
+    model.eval()
     for inputs, labels in testloader:
         inputs = inputs.float()
         inputs, labels = inputs.to(device), labels.to(device)
@@ -59,18 +62,12 @@ def test(model, testloader, criterion, device='cuda:0'):
         acc_metric.update((y_pred, labels))
         prec_metric.update((y_pred, labels))
         rec_metric.update((y_pred, labels))
-        
-        ps = torch.exp(outputs)
-        # Class with highest probability is our predicted class, compare with true label
-        equality = (labels.data == ps.max(1)[1])
-        # Accuracy is number of correct predictions divided by all predictions, just take the mean
-        accuracy += equality.type_as(torch.FloatTensor()).mean()
     
     acc = acc_metric.compute()
-    prec = prec_metric.compute().item()
-    rec = rec_metric.compute().item()
+    prec = prec_metric.compute()
+    rec = rec_metric.compute()
     f1 = 2 * prec * rec / (prec + rec)
-    return test_loss, acc, prec, rec, f1, accuracy
+    return test_loss, acc, prec, rec, f1
 
 
 def load_dataset(dataset):

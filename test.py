@@ -11,9 +11,12 @@ import argparse
 
 def main(args):
     dataset = args.dataset
-    _, test_dataset = load_dataset(dataset)
+    train_dataset, test_dataset = load_dataset(dataset)
     
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size)
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size)
+    
+    loader = train_loader if args.train else test_loader
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print("Device: {}".format(device))
@@ -24,9 +27,8 @@ def main(args):
 
     criterion = nn.NLLLoss()
     
-    test_loss, acc, prec, rec, f1, a2 = test(mlstm_fcn_model, test_loader, criterion, device)
+    test_loss, acc, prec, rec, f1 = test(mlstm_fcn_model, loader, criterion, device)
     print("Test loss: {:.6f}.. Test Accuracy: {:.2f}%, Precision: {:.2f}%, Recall: {:.2f}%, F1: {:.2f}%".format(test_loss, acc*100, prec*100, rec*100, f1*100))
-    print(a2)
 
 
 if __name__ == '__main__':
@@ -34,5 +36,6 @@ if __name__ == '__main__':
     p.add_argument("--batch_size", type=int, default=50)
     p.add_argument("--weights", type=str, default="model_mlstm_fcn.pt")
     p.add_argument("--dataset", type=str, default="AF")
+    p.add_argument("--train", type=bool, default=True)
     args = p.parse_args()
     main(args)
