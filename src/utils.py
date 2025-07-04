@@ -43,6 +43,7 @@ def train(model, trainloader, criterion, optimizer, epoches=10, device='cpu', ru
             
      
 def test(model, testloader, criterion, device='cuda:0'):
+    accuracy = 0.0
     acc_metric = Accuracy()
     prec_metric = Precision(average=True)
     rec_metric = Recall(average=True)
@@ -54,17 +55,22 @@ def test(model, testloader, criterion, device='cuda:0'):
         outputs = model(inputs)
         loss = criterion(outputs, labels).item()
         test_loss += loss
-        ps = torch.exp(outputs)
-        y_prob, y_pred= ps.max(1)
+        y_pred = outputs
         acc_metric.update((y_pred, labels))
         prec_metric.update((y_pred, labels))
         rec_metric.update((y_pred, labels))
+        
+        ps = torch.exp(outputs)
+        # Class with highest probability is our predicted class, compare with true label
+        equality = (labels.data == ps.max(1)[1])
+        # Accuracy is number of correct predictions divided by all predictions, just take the mean
+        accuracy += equality.type_as(torch.FloatTensor()).mean()
     
     acc = acc_metric.compute()
     prec = prec_metric.compute().item()
     rec = rec_metric.compute().item()
     f1 = 2 * prec * rec / (prec + rec)
-    return test_loss, acc, prec, rec, f1
+    return test_loss, acc, prec, rec, f1, accuracy
 
 
 def load_dataset(dataset):
