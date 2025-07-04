@@ -12,10 +12,10 @@ import argparse
 def main(args):
     dataset = args.dataset
     
-    train_dataset, test_dataset = load_dataset(dataset)
+    train_dataset, _ = load_dataset(dataset)
     
     train_dataloader = DataLoader(train_dataset, batch_size=6)
-    test_dataloader = DataLoader(test_dataset, batch_size=6)
+    # test_dataloader = DataLoader(test_dataset, batch_size=6)
     
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print("Device: {}".format(device))
