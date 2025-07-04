@@ -4,14 +4,14 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 
 from src.model import MLSTM_FCN
-from src.utils import test, load_datasets
+from src.utils import test, load_dataset
 
 import argparse
 
 
 def main(args):
     dataset = args.dataset
-    _, test_dataset = load_datasets(dataset)
+    _, test_dataset = load_dataset(dataset)
     
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size)
 
