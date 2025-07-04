@@ -44,8 +44,8 @@ def train(model, trainloader, criterion, optimizer, epoches=10, device='cpu', ru
      
 def test(model, testloader, criterion, device='cuda:0'):
     acc_metric = Accuracy()
-    prec_metric = Precision()
-    rec_metric = Recall()
+    prec_metric = Precision(average=True)
+    rec_metric = Recall(average=True)
     test_loss = 0.0
     for inputs, labels in testloader:
         inputs = inputs.float()
@@ -61,8 +61,8 @@ def test(model, testloader, criterion, device='cuda:0'):
         rec_metric.update((y_pred, labels))
     
     acc = acc_metric.compute()
-    prec = prec_metric.compute()
-    rec = rec_metric.compute()
+    prec = prec_metric.compute().item()
+    rec = rec_metric.compute().item()
     f1 = 2 * prec * rec / (prec + rec)
     return test_loss, acc, prec, rec, f1
 
