@@ -35,6 +35,6 @@ if __name__ == '__main__':
     p.add_argument("--batch_size", type=int, default=5)
     p.add_argument("--weights", type=str, default="model_mlstm_fcn.pt")
     p.add_argument("--dataset", type=str, default="AF")
-    p.add_argument("--train", type=bool, default=True)
+    p.add_argument("--train", type=bool, default=False)
     args = p.parse_args()
     main(args)

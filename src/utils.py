@@ -48,18 +48,18 @@ def test(model, testloader, criterion, device='cuda:0'):
     prec_metric = Precision(average=True)
     rec_metric = Recall(average=True)
     test_loss = 0.0
-    model.eval()
-    for inputs, labels in testloader:
-        inputs = inputs.float()
-        inputs, labels = inputs.to(device), labels.to(device)
-        
-        outputs = model(inputs)
-        loss = criterion(outputs, labels).item()
-        test_loss += loss
-        y_pred = outputs
-        acc_metric.update((y_pred, labels))
-        prec_metric.update((y_pred, labels))
-        rec_metric.update((y_pred, labels))
+    with torch.no_grad():
+        for inputs, labels in testloader:
+            inputs = inputs.float()
+            inputs, labels = inputs.to(device), labels.to(device)
+            
+            outputs = model(inputs)
+            loss = criterion(outputs, labels).item()
+            test_loss += loss
+            y_pred = outputs
+            acc_metric.update((y_pred, labels))
+            prec_metric.update((y_pred, labels))
+            rec_metric.update((y_pred, labels))
     
     acc = acc_metric.compute()
     prec = prec_metric.compute()
