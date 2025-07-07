@@ -15,7 +15,10 @@ def main(args):
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size)
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size)
     
-    loader = train_loader if args.train else test_loader
+    if args.train == True:
+        loader = train_loader
+    else:
+        loader = test_loader
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print("Device: {}".format(device))
