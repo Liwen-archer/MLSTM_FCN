@@ -20,6 +20,7 @@ def train(model, trainloader, criterion, optimizer, epoches=10, device='cpu', ru
     for epoch in range(epoches):
         train_loss = 0.0
         for inputs, labels, in trainloader:
+            inputs = inputs.float()
             inputs, labels = inputs.to(device), labels.to(device)
 
             optimizer.zero_grad()
@@ -49,6 +50,7 @@ def test(model, testloader, criterion, device='cuda:0'):
     test_loss = 0.0
     model.eval()
     for inputs, labels in testloader:
+        inputs = inputs.float()
         inputs, labels = inputs.to(device), labels.to(device)
         
         outputs = model(inputs)
@@ -69,10 +71,10 @@ def test(model, testloader, criterion, device='cuda:0'):
 def load_dataset(dataset):
     data_path = os.path.join('./data', dataset)
     
-    x_train = np.load(os.path.join(data_path, 'x_train.npy')).astype(np.float32)
-    y_train = np.load(os.path.join(data_path, 'y_train.npy')).astype(np.int32)
-    x_test = np.load(os.path.join(data_path, 'x_test.npy')).astype(np.float32)
-    y_test = np.load(os.path.join(data_path, 'y_test.npy')).astype(np.int32)
+    x_train = np.load(os.path.join(data_path, 'x_train.npy')).astype(np.float64)
+    y_train = np.load(os.path.join(data_path, 'y_train.npy')).astype(np.int64)
+    x_test = np.load(os.path.join(data_path, 'x_test.npy')).astype(np.float64)
+    y_test = np.load(os.path.join(data_path, 'y_test.npy')).astype(np.int64)
     
     x_train = torch.from_numpy(x_train)
     y_train = torch.from_numpy(y_train)
