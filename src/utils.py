@@ -15,13 +15,11 @@ def train(model, trainloader, criterion, optimizer, epoches=10, device='cpu', ru
     
     losses = []
     state = {}
-    ipoch = 0
     
     model.train()
     for epoch in range(epoches):
         train_loss = 0.0
-        for inputs, labels, in trainloader:      
-            inputs = inputs.float()
+        for inputs, labels, in trainloader:
             inputs, labels = inputs.to(device), labels.to(device)
 
             optimizer.zero_grad()
@@ -39,9 +37,8 @@ def train(model, trainloader, criterion, optimizer, epoches=10, device='cpu', ru
             best_loss = train_loss
             print("Epoch: {}/{}.. ".format(epoch + 1, epoches), "Training Loss: {:.6f}.. ".format(train_loss))
             state = model.state_dict()
-            ipoch = epoch + 1
     
-    torch.save(state, f'weights/{run_name}_{ipoch}.pt')       
+    torch.save(state, f'weights/{run_name}.pt')       
     return losses
             
      
@@ -52,7 +49,6 @@ def test(model, testloader, criterion, device='cuda:0'):
     test_loss = 0.0
     model.eval()
     for inputs, labels in testloader:
-        inputs = inputs.float()
         inputs, labels = inputs.to(device), labels.to(device)
         
         outputs = model(inputs)

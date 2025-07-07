@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import torch.optim as optim
 from torch.utils.data import DataLoader
 
 from src.model import MLSTM_FCN
@@ -33,7 +32,7 @@ def main(args):
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
-    p.add_argument("--batch_size", type=int, default=50)
+    p.add_argument("--batch_size", type=int, default=5)
     p.add_argument("--weights", type=str, default="model_mlstm_fcn.pt")
     p.add_argument("--dataset", type=str, default="AF")
     p.add_argument("--train", type=bool, default=True)
