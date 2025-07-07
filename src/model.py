@@ -22,7 +22,7 @@ class SELayer(nn.Module):
 
 
 class MLSTM_FCN(nn.Module):
-    def __init__(self, num_classes, max_seq_len, num_features, num_lstm_out=128, num_lstm_layers=1, conv1_nf=128, conv2_nf=256, conv3_nf=128, lstm_drop_p=0.8, fc_drop_p=0.3):
+    def __init__(self, num_classes, max_seq_len, num_features, num_lstm_out=128, num_lstm_layers=1, conv1_nf=128, conv2_nf=256, conv3_nf=128, lstm_drop_p=0.8, fc_drop_p=0.3, kernels = [8, 5, 3]):
         super(MLSTM_FCN, self).__init__()
         
         self.num_classes = num_classes
@@ -41,9 +41,9 @@ class MLSTM_FCN(nn.Module):
         
         self.lstm = nn.LSTM(input_size=self.num_features, hidden_size=self.num_lstm_out, num_layers=self.num_lstm_layers, batch_first=True)
 
-        self.conv1 = nn.Conv1d(self.num_features, self.conv1_nf, 8)
-        self.conv2 = nn.Conv1d(self.conv1_nf, self.conv2_nf, 5)
-        self.conv3 = nn.Conv1d(self.conv2_nf, self.conv3_nf, 3)
+        self.conv1 = nn.Conv1d(self.num_features, self.conv1_nf, kernels[0])
+        self.conv2 = nn.Conv1d(self.conv1_nf, self.conv2_nf, kernels[1])
+        self.conv3 = nn.Conv1d(self.conv2_nf, self.conv3_nf, kernels[2])
         
         self.bn1 = nn.BatchNorm1d(self.conv1_nf)
         self.bn2 = nn.BatchNorm1d(self.conv2_nf)

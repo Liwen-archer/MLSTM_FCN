@@ -4,6 +4,7 @@ from torch.utils.data import DataLoader
 
 from src.model import MLSTM_FCN
 from src.utils import test, load_dataset
+from src.constants import NUM_CLASSES, MAX_SEQ_LEN, NUM_FEATURES, KERNELS
 
 import argparse
 
@@ -16,14 +17,16 @@ def main(args):
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size)
     
     if args.train == 'train':
+        print("load train dataloader")
         loader = train_loader
-    else:
+    elif args.train == 'test':
+        print("load test dataloader")
         loader = test_loader
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print("Device: {}".format(device))
     
-    mlstm_fcn_model = MLSTM_FCN(3, 640, 2)
+    mlstm_fcn_model = MLSTM_FCN(num_classes=NUM_CLASSES[dataset], max_seq_len=MAX_SEQ_LEN[dataset], num_features=NUM_FEATURES[dataset], kernels=KERNELS[dataset])
     mlstm_fcn_model.load_state_dict(torch.load('weights/'+args.weights))
     mlstm_fcn_model.to(device)
 

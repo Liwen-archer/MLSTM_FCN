@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 
 from src.model import MLSTM_FCN
 from src.utils import train, test, load_dataset, plot_loss
+from src.constants import NUM_CLASSES, MAX_SEQ_LEN, NUM_FEATURES, KERNELS
 
 import argparse
 
@@ -20,7 +21,7 @@ def main(args):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print("Device: {}".format(device))
     
-    mlstm_fcn_model = MLSTM_FCN(3,640,2)
+    mlstm_fcn_model = MLSTM_FCN(num_classes=NUM_CLASSES[dataset], max_seq_len=MAX_SEQ_LEN[dataset], num_features=NUM_FEATURES[dataset], kernels=KERNELS[dataset])
     mlstm_fcn_model.to(device)
 
     optimizer = optim.SGD(mlstm_fcn_model.parameters(), lr=args.learning_rate, momentum=0.9)
