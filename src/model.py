@@ -59,7 +59,10 @@ class MLSTM_FCN(nn.Module):
         self.fc = nn.Linear(self.conv3_nf + self.num_lstm_out, self. num_classes)
 
     def forward(self, x):
-        x1, (_, _) = self.lstm(x)
+        seq_lens = torch.tensor([self.max_seq_len])
+        x1 = nn.utils.rnn.pack_padded_sequence(x, seq_lens, batch_first=True, enforce_sorted=False)
+        x1, (_, _) = self.lstm(x1)
+        x1, _ = nn.utils.rnn.pad_packed_sequence(x1, batch_first=True, padding_value=0.0)
         x1 = x1[:,-1,:]
         
         x2 = x.transpose(2, 1)

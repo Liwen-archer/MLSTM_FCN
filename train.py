@@ -30,7 +30,7 @@ def main(args):
     
     plot_loss(losses)
     
-    test_loss, acc, prec, rec, f1 = test(mlstm_fcn_model, test_dataloader, criterion, device)
+    test_loss, acc, prec, rec, f1 = test(mlstm_fcn_model, train_dataloader, criterion, device)
     print("Test loss: {:.6f}.. Test Accuracy: {:.2f}%, Precision: {:.2f}%, Recall: {:.2f}%, F1: {:.2f}%".format(test_loss, acc*100, prec*100, rec*100, f1*100))
     
     
