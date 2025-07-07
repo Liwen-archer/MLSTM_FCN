@@ -15,7 +15,7 @@ def main(args):
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size)
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size)
     
-    if args.train == True:
+    if args.train == 'train':
         loader = train_loader
     else:
         loader = test_loader
@@ -38,6 +38,6 @@ if __name__ == '__main__':
     p.add_argument("--batch_size", type=int, default=5)
     p.add_argument("--weights", type=str, default="model_mlstm_fcn.pt")
     p.add_argument("--dataset", type=str, default="AF")
-    p.add_argument("--train", type=bool, default=False)
+    p.add_argument("--train", type=str, default='train')
     args = p.parse_args()
     main(args)
